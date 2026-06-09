@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTuber Awards Voting 2026 Q2</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 font-sans">
+
+    <header class="text-center mb-12 mt-6">
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase">
+            YouTuber Awards Voting 2026 Q2
+        </h1>
+        <div class="mt-4 bg-slate-900 border border-slate-800 px-6 py-2 rounded-full inline-block">
+            Verfügbare Stimmen: <span id="votes-left" class="font-bold text-yellow-400 text-xl">3</span> / 3
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl w-full px-4 mb-12">
+        
+        <button onclick="sendVote('Option 1', 'Gauzi')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://yt3.googleusercontent.com/ytc/AIdro_mafacah52Yt5cqaFz-p1OcGPMO2nfwQ2LGMEybFmXa71U=s1920-c-k-c0x00ffffff-no-rj" alt="Option 1" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Gauzi (@Gauzi_)</h2>
+                <p class="text-xs text-purple-400 mt-1 uppercase tracking-widest">Gewinnewr des letzten YouTuber Awards</p>
+            </div>
+        </button>
+
+        <button onclick="sendVote('Option 2', 'Nächste großartige Idee')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-pink-500 hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://picsum.photos/400/250?random=2" alt="Option 2" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Option 2</h2>
+                <p class="text-xs text-pink-400 mt-1 uppercase tracking-widest">Beschreibung 2</p>
+            </div>
+        </button>
+
+        <button onclick="sendVote('Option 3', 'Noch ein Beispieltext')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://picsum.photos/400/250?random=3" alt="Option 3" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Option 3</h2>
+                <p class="text-xs text-yellow-400 mt-1 uppercase tracking-widest">Beschreibung 3</p>
+            </div>
+        </button>
+
+        <button onclick="sendVote('Option 4', 'Vierte Abstimmungsmöglichkeit')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://picsum.photos/400/250?random=4" alt="Option 4" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Option 4</h2>
+                <p class="text-xs text-blue-400 mt-1 uppercase tracking-widest">Beschreibung 4</p>
+            </div>
+        </button>
+
+        <button onclick="sendVote('Option 5', 'Einfacher Platzhalter')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://picsum.photos/400/250?random=5" alt="Option 5" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Option 5</h2>
+                <p class="text-xs text-emerald-400 mt-1 uppercase tracking-widest">Beschreibung 5</p>
+            </div>
+        </button>
+
+        <button onclick="sendVote('Option 6', 'Text für Option sechs')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://picsum.photos/400/250?random=6" alt="Option 6" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Option 6</h2>
+                <p class="text-xs text-red-400 mt-1 uppercase tracking-widest">Beschreibung 6</p>
+            </div>
+        </button>
+
+        <button onclick="sendVote('Option 7', 'Letzter Beispielinhalt')" class="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden text-center transition-all duration-300 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+            <img src="https://picsum.photos/400/250?random=7" alt="Option 7" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
+            <div class="p-5">
+                <span class="text-3xl">🗳️</span>
+                <h2 class="text-xl font-bold mt-1">Option 7</h2>
+                <p class="text-xs text-cyan-400 mt-1 uppercase tracking-widest">Beschreibung 7</p>
+            </div>
+        </button>
+
+    </div>
+
+    <script>
+        // TRAGE HIER DEINE DISCORD WEBHOOK URL EIN
+        const DISCORD_WEBHOOK_URL = 'DEINE_DISCORD_WEBHOOK_URL';
+
+        const MAX_VOTES = 3;
+
+        // Prüfen, wie viele Stimmen der Nutzer schon abgegeben hat
+        function getUsedVotes() {
+            const votes = localStorage.getItem('usedVotesCount');
+            return votes ? parseInt(votes) : 0;
+        }
+
+        // Anzeige beim Laden der Seite aktualisieren
+        function updateUI() {
+            const used = getUsedVotes();
+            const left = MAX_VOTES - used;
+            document.getElementById('votes-left').innerText = left;
+
+            // Wenn keine Stimmen mehr übrig sind, sperren wir alle Buttons
+            if (left <= 0) {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(btn => btn.disabled = true);
+                document.getElementById('votes-left').parentElement.classList.add('border-red-500', 'text-red-400');
+            }
+        }
+
+        async function sendVote(id, title) {
+            if (DISCORD_WEBHOOK_URL === 'DEINE_DISCORD_WEBHOOK_URL') {
+                alert('Bitte füge zuerst deine Discord-Webhook-URL im Code ein!');
+                return;
+            }
+
+            const usedVotes = getUsedVotes();
+
+            // Sicherheitscheck im Browser
+            if (usedVotes >= MAX_VOTES) {
+                alert('Du hast deine 3 Stimmen bereits aufgebraucht!');
+                return;
+            }
+
+            // Nachricht für Discord zusammenbauen (inklusive Info, die wievielte Stimme das war)
+            const currentVoteNumber = usedVotes + 1;
+            const discordMessage = {
+                content: `🎤 **Neuer Vote auf YTAwards!** \nStimme **${currentVoteNumber}/3** ging an: **${id} - ${title}** 🏆`
+            };
+
+            try {
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(discordMessage)
+                });
+
+                if (response.ok) {
+                    // Stimme im Speicher des Browsers hochzählen
+                    localStorage.setItem('usedVotesCount', currentVoteNumber);
+                    
+                    alert(`Erfolgreich abgetimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
+                    
+                    // Oberfläche aktualisieren (und ggf. sperren)
+                    updateUI();
+                } else {
+                    alert('Fehler beim Senden an Discord.');
+                }
+            } catch (error) {
+                console.error('Fehler:', error);
+                alert('Etwas ist schiefgelaufen.');
+            }
+        }
+
+        // Beim Start der Seite die UI prüfen
+        updateUI();
+    </script>
+</body>
+</html>

@@ -59,7 +59,7 @@
             <img src="https://yt3.googleusercontent.com/ytc/AIdro_lwhyE88NXJ7IIBeXXBq7bWyIwYzMJVKdQvUDgncf6Vtg=s1920-c-k-c0x00ffffff-no-rj" alt="SYous Profilbild" class="w-full h-40 object-cover group-hover:opacity-80 transition-opacity">
             <div class="p-5">
                 <span class="text-3xl">🗳️</span>
-                <h2 class="text-xl font-bold mt-1">SYou (@SYou)"</h2>
+                <h2 class="text-xl font-bold mt-1">SYou (@SYou)</h2>
                 <p class="text-xs text-emerald-400 mt-1 uppercase tracking-widest">SYou</p>
             </div>
         </button>
@@ -163,24 +163,23 @@ async function sendVote(id, title) {
         }]
     };
 
-    try {
-        const response = await fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(discordMessage)
-        });
+try {
+    const response = await fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(discordMessage)
+    });
 
-        if (response.ok) {
-            localStorage.setItem('usedVotesCount', currentVoteNumber);
-            alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
-            updateUI();
-        } else {
-            alert('Fehler beim Senden an Discord.');
-        }
-    catch (error) {
+    if (response.ok) {
+        localStorage.setItem('usedVotesCount', currentVoteNumber);
+        alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
+        updateUI();
+    } else {
+        alert('Fehler beim Senden an Discord.');
+    }
+} catch (error) {
     console.error(error);
     alert(error.message);
-}
 }
 
 updateUI();

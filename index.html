@@ -92,99 +92,92 @@
         </button>
     </div>
 
-    <script>
-// TRAGE HIER DEINE DISCORD WEBHOOK URL EIN
-const DISCORD_WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1513876109941412071/0cgKvFxucN_OmhckjiyKoN1mG-Lj1ng2bfOqrSuUsrs9LXVOiznFLXKFHiGx4jeZgMVE';
+<script>
+        // TRAGE HIER DEINE NEUE DISCORD WEBHOOK URL EIN
+        // (Denk dran, den alten Webhook in Discord zu löschen, da er im Chat sichtbar war!)
+        const DISCORD_WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1513876109941412071/0cgKvFxucN_OmhckjiyKoN1mG-Lj1ng2bfOqrSuUsrs9LXVOiznFLXKFHiGx4jeZgMVE';
 
-const MAX_VOTES = 3;
+        const MAX_VOTES = 3;
 
-function getUsedVotes() {
-    const votes = localStorage.getItem('usedVotesCount');
-    return votes ? parseInt(votes) : 0;
-}
-
-function updateUI() {
-    const used = getUsedVotes();
-    const left = MAX_VOTES - used;
-    document.getElementById('votes-left').innerText = left;
-
-    if (left <= 0) {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(btn => btn.disabled = true);
-        document.getElementById('votes-left').parentElement.classList.add('border-red-500', 'text-red-400');
-    }
-}
-
-async function sendVote(id, title) {
-    if (DISCORD_WEBHOOK_URL === 'DEINE_DISCORD_WEBHOOK_URL') {
-        alert('Bitte füge zuerst deine Discord-Webhook-URL im Code ein!');
-        return;
-    }
-
-    const usedVotes = getUsedVotes();
-    if (usedVotes >= MAX_VOTES) {
-        alert('Du hast deine 3 Stimmen bereits aufgebraucht!');
-        return;
-    }
-
-    // --- DETEKTIV-MODUS START ---
-    // 1. Wir erstellen eine zufällige ID beim ersten Besuch und speichern sie.
-    // Wenn jemand schummelt und nur den Counter löscht, bleibt diese ID oft gleich!
-    let voterId = localStorage.getItem('voter_fingerprint_id');
-    if (!voterId) {
-        voterId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
-        localStorage.setItem('voter_fingerprint_id', voterId);
-    }
-
-    // 2. Wir holen Infos über den Browser und das System (z.B. "iPhone; CPU iPhone OS 17_4")
-    const browserInfo = navigator.userAgent.split(')')[0] + ')'; // Kürzt den Text sinnvoll
-    
-    // 3. Bildschirmauflösung (jeder PC/Handy hat oft eine leicht andere Kombi)
-    const screenSize = `${screen.width}x${screen.height}`;
-    
-    // 4. Sprache des Handys/PCs
-    const userLang = navigator.language;
-    // --- DETEKTIV-MODUS ENDE ---
-
-    const currentVoteNumber = usedVotes + 1;
-    
-    // Stylische Discord-Nachricht (Embed) für bessere Übersicht
-    const discordMessage = {
-        embeds: [{
-            title: `🎤 Neuer Vote auf YTAwards! (${currentVoteNumber}/3)`,
-            color: 16711823, // Pinker Rand in Discord
-            fields: [
-                { name: "Gewählt für", value: `**${id}** (${title})`, inline: false },
-                { name: "🕵️‍♂️ Voter-ID (Browser-Key)", value: `\`${voterId}\``, inline: true },
-                { name: "📱 Gerät/System", value: `\`${browserInfo}\``, inline: true },
-                { name: "🖥️ Bildschirm & Sprache", value: `\`${screenSize} | ${userLang}\``, inline: true }
-            ],
-            timestamp: new Date().toISOString()
-        }]
-    };
-
-try {
-        const response = await fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(discordMessage)
-        });
-
-        if (response.ok) {
-            localStorage.setItem('usedVotesCount', currentVoteNumber);
-            alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
-            updateUI();
-        } else {
-            alert('Fehler beim Senden an Discord.');
+        function getUsedVotes() {
+            const votes = localStorage.getItem('usedVotesCount');
+            return votes ? parseInt(votes) : 0;
         }
-    } catch (error) {
-        console.error(error);
-        alert(error.message);
-    } // <-- Hier schließt du den catch-Block
 
-} // <-- Diese Klammer schließt jetzt sauber die komplette Funktion "sendVote"!
+        function updateUI() {
+            const used = getUsedVotes();
+            const left = MAX_VOTES - used;
+            document.getElementById('votes-left').innerText = left;
 
-updateUI();
+            if (left <= 0) {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(btn => btn.disabled = true);
+                document.getElementById('votes-left').parentElement.classList.add('border-red-500', 'text-red-400');
+            }
+        }
+
+        async function sendVote(id, title) {
+            if (DISCORD_WEBHOOK_URL === 'DEINE_DISCORD_WEBHOOK_URL') {
+                alert('Bitte füge zuerst deine Discord-Webhook-URL im Code ein!');
+                return;
+            }
+
+            const usedVotes = getUsedVotes();
+            if (usedVotes >= MAX_VOTES) {
+                alert('Du hast deine 3 Stimmen bereits aufgebraucht!');
+                return;
+            }
+
+            // --- DETEKTIV-MODUS START ---
+            let voterId = localStorage.getItem('voter_fingerprint_id');
+            if (!voterId) {
+                voterId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+                localStorage.setItem('voter_fingerprint_id', voterId);
+            }
+
+            const browserInfo = navigator.userAgent.split(')')[0] + ')'; 
+            const screenSize = `${screen.width}x${screen.height}`;
+            const userLang = navigator.language;
+            // --- DETEKTIV-MODUS ENDE ---
+
+            const currentVoteNumber = usedVotes + 1;
+            
+            const discordMessage = {
+                embeds: [{
+                    title: `🎤 Neuer Vote auf YTAwards! (${currentVoteNumber}/3)`,
+                    color: 16711823, 
+                    fields: [
+                        { name: "Gewählt für", value: `**${id}** (${title})`, inline: false },
+                        { name: "🕵️‍♂️ Voter-ID (Browser-Key)", value: `\`${voterId}\``, inline: true },
+                        { name: "📱 Gerät/System", value: `\`${browserInfo}\``, inline: true },
+                        { name: "🖥️ Bildschirm & Sprache", value: `\`${screenSize} | ${userLang}\``, inline: true }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(discordMessage)
+                });
+
+                if (response.ok) {
+                    localStorage.setItem('usedVotesCount', currentVoteNumber);
+                    alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
+                    updateUI();
+                } else {
+                    alert('Fehler beim Senden an Discord.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        } // <-- Schließt sendVote sauber
+
+        // Initialer Aufruf beim Laden der Seite
+        updateUI();
     </script>
 </body>
 </html>

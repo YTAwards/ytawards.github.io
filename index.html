@@ -164,25 +164,26 @@ async function sendVote(id, title) {
     };
 
 try {
-    const response = await fetch(DISCORD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(discordMessage)
-    });
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(discordMessage)
+        });
 
-    if (response.ok) {
-        localStorage.setItem('usedVotesCount', currentVoteNumber);
-        alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
-        updateUI();
-    } else {
-        alert('Fehler beim Senden an Discord.');
-    }
-} catch (error) {
-    console.error(error);
-    alert(error.message);
-}
+        if (response.ok) {
+            localStorage.setItem('usedVotesCount', currentVoteNumber);
+            alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
+            updateUI();
+        } else {
+            alert('Fehler beim Senden an Discord.');
+        }
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    } // <-- Hier schließt du den catch-Block
 
-} // so das sollte die kacke schließen!!!!!!!!! agrhhhhhhhhhhhhhhhhhh js lass mich in ruhe :O    
+} // <-- Diese Klammer schließt jetzt sauber die komplette Funktion "sendVote"!
+
 updateUI();
     </script>
 </body>

@@ -137,7 +137,7 @@ async function sendVote(id, title) {
     }
 
     // 2. Wir holen Infos über den Browser und das System (z.B. "iPhone; CPU iPhone OS 17_4")
-    const browserInfo = navigator.userAgent.split(')').0 + ')'; // Kürzt den Text sinnvoll
+    const browserInfo = navigator.userAgent.split(')')[0] + ')'; // Kürzt den Text sinnvoll
     
     // 3. Bildschirmauflösung (jeder PC/Handy hat oft eine leicht andere Kombi)
     const screenSize = `${screen.width}x${screen.height}`;
@@ -177,10 +177,10 @@ async function sendVote(id, title) {
         } else {
             alert('Fehler beim Senden an Discord.');
         }
-    } catch (error) {
-        console.error('Fehler:', error);
-        alert('Etwas ist schiefgelaufen.');
-    }
+    catch (error) {
+    console.error(error);
+    alert(error.message);
+}
 }
 
 updateUI();

@@ -55,6 +55,11 @@
                 <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Sek</div>
             </div>
         </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+                <div id="w-ms" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">ms</div>
+            </div>
+        </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-6 py-4 inline-flex gap-8 text-left">
             <div>
@@ -257,6 +262,7 @@
             document.getElementById('w-hours').textContent = pad(Math.floor((t % 86400) / 3600));
             document.getElementById('w-mins').textContent  = pad(Math.floor((t % 3600) / 60));
             document.getElementById('w-secs').textContent  = pad(t % 60);
+            document.getElementById('w-ms').textContent    = String(t % 1000).padStart(3, '0');
 
         } else if (now >= OPEN_TIME && now < CLOSE_TIME) {
             waiting.className     = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';

@@ -21,9 +21,6 @@
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 font-sans bg-gradient-to-tr from-slate-950 via-purple-950/20 to-slate-950">
 
-    <!-- ══════════════════════════════════════
-         SCREEN: Noch nicht offen (Countdown)
-    ══════════════════════════════════════ -->
     <div id="screen-waiting-block" class="flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6">
         <p class="text-xs font-bold tracking-widest uppercase text-purple-400 mb-4">YouTuber Awards Voting 2026 Q2</p>
         <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase mb-3">
@@ -36,23 +33,26 @@
             Noch nicht geöffnet
         </div>
 
-        <!-- Countdown -->
-        <div class="flex gap-3 justify-center mb-8">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+        <div class="flex gap-2 justify-center mb-8 flex-wrap">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-4 min-w-[65px]">
                 <div id="w-days" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
                 <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Tage</div>
             </div>
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-4 min-w-[65px]">
                 <div id="w-hours" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
                 <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Std</div>
             </div>
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-4 min-w-[65px]">
                 <div id="w-mins" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
                 <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Min</div>
             </div>
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-4 min-w-[65px]">
                 <div id="w-secs" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
                 <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Sek</div>
+            </div>
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-4 py-4 min-w-[65px]">
+                <div id="w-ms" class="text-3xl font-extrabold text-emerald-400 font-mono">000</div>
+                <div class="text-[10px] uppercase tracking-widest text-emerald-500/70 mt-1">ms</div>
             </div>
         </div>
 
@@ -68,9 +68,6 @@
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SCREEN: Voting offen
-    ══════════════════════════════════════ -->
     <div id="screen-open-block" class="contents">
 
         <header class="text-center mb-8 mt-6 w-full max-w-6xl px-4">
@@ -78,7 +75,6 @@
                 YouTuber Awards Voting 2026 Q2
             </h1>
 
-            <!-- Status + Restzeit -->
             <div class="flex flex-wrap items-center justify-center gap-3 mt-4">
                 <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 px-6 py-2 rounded-full inline-block shadow-[0_0_15px_rgba(234,179,8,0.1)]">
                     Verfügbare Stimmen: <span id="votes-left" class="font-bold text-yellow-400 text-xl drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]">3</span> / 3
@@ -192,12 +188,7 @@
             </div>
         </button>
 
-    </div><!-- end screen-open-block -->
-
-    <!-- ══════════════════════════════════════
-         SCREEN: Voting geschlossen
-    ══════════════════════════════════════ -->
-    <div id="screen-closed-block" class="flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6">
+    </div><div id="screen-closed-block" class="flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6">
         <p class="text-xs font-bold tracking-widest uppercase text-purple-400 mb-4">YouTuber Awards Voting 2026 Q2</p>
         <div class="text-6xl mb-6">🔒</div>
         <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase mb-3">
@@ -226,7 +217,7 @@
     document.getElementById('info-open').textContent  = fmt(OPEN_TIME);
     document.getElementById('info-close').textContent = fmt(CLOSE_TIME);
 
-    function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
+    function pad(n, length = 2) { return String(Math.floor(n)).padStart(length, '0'); }
 
     function fmtRemaining(ms) {
         const t = Math.max(0, ms / 1000);
@@ -252,11 +243,15 @@
             open.style.display    = 'none';
             closed.className      = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
 
-            const t = Math.max(0, toOpen / 1000);
-            document.getElementById('w-days').textContent  = pad(Math.floor(t / 86400));
-            document.getElementById('w-hours').textContent = pad(Math.floor((t % 86400) / 3600));
-            document.getElementById('w-mins').textContent  = pad(Math.floor((t % 3600) / 60));
-            document.getElementById('w-secs').textContent  = pad(t % 60);
+            const totalSeconds = Math.max(0, toOpen / 1000);
+            
+            // Berechnung inklusive verbleibender Millisekunden
+            document.getElementById('w-days').textContent  = pad(totalSeconds / 86400);
+            document.getElementById('w-hours').textContent = pad((totalSeconds % 86400) / 3600);
+            document.getElementById('w-mins').textContent  = pad((totalSeconds % 3600) / 60);
+            document.getElementById('w-secs').textContent  = pad(totalSeconds % 60);
+            // Extrahiert die echten verbleibenden 3-stelligen Millisekunden (000-999)
+            document.getElementById('w-ms').textContent    = pad(toOpen % 1000, 3);
 
         } else if (now >= OPEN_TIME && now < CLOSE_TIME) {
             waiting.className     = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
@@ -342,7 +337,8 @@
     }
 
     tick();
-    setInterval(tick, 1000);
+    // GANZ WICHTIG: Aktualisiert die Uhr jetzt alle 33 Millisekunden (~30 FPS), damit die Millisekunden flüssig rotieren!
+    setInterval(tick, 33);
     updateUI();
 </script>
 </body>

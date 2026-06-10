@@ -5,110 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTuber Awards Voting 2026 Q2</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .screen { display: none; }
+        .screen.active { display: contents; }
+        #screen-waiting-block { display: none; }
+        #screen-waiting-block.active { display: flex; }
+        #screen-closed-block { display: none; }
+        #screen-closed-block.active { display: flex; }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: .4; transform: scale(1.5); }
+        }
+        .pulse-dot { animation: pulse-dot 1.5s infinite; }
+    </style>
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 font-sans bg-gradient-to-tr from-slate-950 via-purple-950/20 to-slate-950">
 
-    <header class="text-center mb-12 mt-6">
-        <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase">
-            YouTuber Awards Voting 2026 Q2
+    <!-- ══════════════════════════════════════
+         SCREEN: Noch nicht offen (Countdown)
+    ══════════════════════════════════════ -->
+    <div id="screen-waiting-block" class="flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6">
+        <p class="text-xs font-bold tracking-widest uppercase text-purple-400 mb-4">YouTuber Awards Voting 2026 Q2</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase mb-3">
+            Voting öffnet bald
         </h1>
-        <div class="mt-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 px-6 py-2 rounded-full inline-block shadow-[0_0_15px_rgba(234,179,8,0.1)]">
-            Verfügbare Stimmen: <span id="votes-left" class="font-bold text-yellow-400 text-xl drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]">3</span> / 3
+        <p class="text-slate-400 text-sm mb-8">Komm rechtzeitig wieder – du kannst dann direkt abstimmen.</p>
+
+        <div class="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-xs font-semibold px-4 py-1.5 rounded-full mb-8">
+            <span class="pulse-dot w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>
+            Noch nicht geöffnet
         </div>
-    </header>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl w-full px-4 mb-12">
-        
-        <button onclick="sendVote('Option 1', 'Gauzi')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/ytc/AIdro_mafacah52Yt5cqaFz-p1OcGPMO2nfwQ2LGMEybFmXa71U=s1960-c-k-c0x00ffffff-rj" alt="Gauzis Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+        <!-- Countdown -->
+        <div class="flex gap-3 justify-center mb-8">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+                <div id="w-days" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Tage</div>
             </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-purple-400 transition-colors">🏆 Gauzi (@Gauzi_)</h2>
-                <p class="text-[10px] text-purple-400/80 mt-1 uppercase tracking-widest font-semibold">Gauzi (Gewinner des letzten YouTuber Awards🏆)</p>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+                <div id="w-hours" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Std</div>
             </div>
-        </button>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+                <div id="w-mins" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Min</div>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 min-w-[70px]">
+                <div id="w-secs" class="text-3xl font-extrabold text-yellow-400 font-mono">00</div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Sek</div>
+            </div>
+        </div>
 
-        <button onclick="sendVote('Option 2', 'Julien Bam')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-pink-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/B7x4_cwtmpwMQR237VCrG6HY0bQml0bRiE4wOPbh1CyO11UesTPZXMjBjgG3i7misl1laJWOPg=s1920-c-k-c0x00ffffff-no-rj" alt="Julien Bams Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-6 py-4 inline-flex gap-8 text-left">
+            <div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Öffnet um</div>
+                <div id="info-open" class="text-sm font-semibold text-white">–</div>
             </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-pink-400 transition-colors">Julien Bam (@julienbam)</h2>
-                <p class="text-[10px] text-pink-400/80 mt-1 uppercase tracking-widest font-semibold">Julien Bam</p>
+            <div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Schließt um</div>
+                <div id="info-close" class="text-sm font-semibold text-white">–</div>
             </div>
-        </button>
-
-        <button onclick="sendVote('Option 3', 'Xman Animation')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-yellow-500 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/Jf1lW_nGpr3dYbKtxrKTcti6Eq9z4SIQZDGncX6_ykUUwhQjMUwIeIgwwzo3CLF4mqlNC9Ft=s1920-c-k-c0x00ffffff-no-rj" alt="Xman Animations Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
-            </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-yellow-400 transition-colors">Xman Animation (@XmanAnimation)</h2>
-                <p class="text-[10px] text-yellow-400/80 mt-1 uppercase tracking-widest font-semibold">Xman Animation</p>
-            </div>
-        </button>
-
-        <button onclick="sendVote('Option 4', 'KreekCraft')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/sTrSKwsLNGlYDlavBC_8fyu6B1Uym_LhzAvSb7U-p1Mb-t_jvVA0LlMDcNCfNfVyY39H6V05lCA=s1920-c-k-c0x00ffffff-no-rj" alt="KreekCrafts Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
-            </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-blue-400 transition-colors">KreekCraft (@KreekCraft)</h2>
-                <p class="text-[10px] text-blue-400/80 mt-1 uppercase tracking-widest font-semibold">KreekCraft</p>
-            </div>
-        </button>
-
-        <button onclick="sendVote('Option 5', 'SYou')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/ytc/AIdro_lwhyE88NXJ7IIBeXXBq7bWyIwYzMJVKdQvUDgncf6Vtg=s1960-c-k-c0x00ffffff-no-rj" alt="SYous Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
-            </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-emerald-400 transition-colors">SYou (@SYou)</h2>
-                <p class="text-[10px] text-emerald-400/80 mt-1 uppercase tracking-widest font-semibold">SYou</p>
-            </div>
-        </button>
-
-        <button onclick="sendVote('Option 6', 'HüseyinAliBS')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-red-500 hover:shadow-[0_0_30px_rgba(239,68,68,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/iX6qkB9qj52lydxpPxRdnusBkbDVnth_r9m5qtoStokFcAyPI1DUFE8z1J-9eSOcHrXpJjsf2Ng=s1920-c-k-c0x00ffffff-no-rj" alt="HüseyinAliBSs Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
-            </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-red-400 transition-colors">HüseyinAliBS (@HüseyinAliBS)</h2>
-                <p class="text-[10px] text-red-400/80 mt-1 uppercase tracking-widest font-semibold">HüseyinAliBS</p>
-            </div>
-        </button>
-
-        <button onclick="sendVote('Option 7', 'iCrimax')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/ytc/AIdro_k2IrEeYOP1Y6t1sxAqoQfT2E0Z2qsJT6xwGyPKs5R0XiE=s1920-c-k-c0x00ffffff-no-rj" alt="iCrimaxs Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
-            </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-cyan-400 transition-colors">iCrimax (@iCrimax)</h2>
-                <p class="text-[10px] text-cyan-400/80 mt-1 uppercase tracking-widest font-semibold">iCrimax</p>
-            </div>
-        </button>
-
-        <button onclick="sendVote('Option 8', 'LaserLuca')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
-            <div class="overflow-hidden h-40">
-                <img src="https://yt3.googleusercontent.com/nN1aL3f2PknPfikS9ofIrYhHhkkV3QSKaATcLSClr96Jw9fAFoB9R-oGEbeNdOMPLYteyKvM=s1920-c-k-c0x00ffffff-no-rj" alt="LaserLucas Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
-            </div>
-            <div class="p-5">
-                <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
-                <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-cyan-400 transition-colors">LaserLuca (@luca)</h2>
-                <p class="text-[10px] text-cyan-400/80 mt-1 uppercase tracking-widest font-semibold">LaserLuca</p>
-            </div>
-        </button>
+        </div>
     </div>
 
-    <button onclick="sendVote('Option 9', 'ApoRed')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+    <!-- ══════════════════════════════════════
+         SCREEN: Voting offen
+    ══════════════════════════════════════ -->
+    <div id="screen-open-block" class="contents">
+
+        <header class="text-center mb-8 mt-6 w-full max-w-6xl px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase">
+                YouTuber Awards Voting 2026 Q2
+            </h1>
+
+            <!-- Status + Restzeit -->
+            <div class="flex flex-wrap items-center justify-center gap-3 mt-4">
+                <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 px-6 py-2 rounded-full inline-block shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                    Verfügbare Stimmen: <span id="votes-left" class="font-bold text-yellow-400 text-xl drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]">3</span> / 3
+                </div>
+                <div class="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-semibold px-4 py-2 rounded-full">
+                    <span class="pulse-dot w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+                    Voting läuft · endet in <span id="open-remaining" class="ml-1 font-mono font-bold">–</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl w-full px-4 mb-12">
+
+            <button onclick="sendVote('Option 1', 'Gauzi')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_mafacah52Yt5cqaFz-p1OcGPMO2nfwQ2LGMEybFmXa71U=s1960-c-k-c0x00ffffff-rj" alt="Gauzis Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-purple-400 transition-colors">🏆 Gauzi (@Gauzi_)</h2>
+                    <p class="text-[10px] text-purple-400/80 mt-1 uppercase tracking-widest font-semibold">Gauzi (Gewinner des letzten YouTuber Awards🏆)</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 2', 'Julien Bam')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-pink-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/B7x4_cwtmpwMQR237VCrG6HY0bQml0bRiE4wOPbh1CyO11UesTPZXMjBjgG3i7misl1laJWOPg=s1920-c-k-c0x00ffffff-no-rj" alt="Julien Bams Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-pink-400 transition-colors">Julien Bam (@julienbam)</h2>
+                    <p class="text-[10px] text-pink-400/80 mt-1 uppercase tracking-widest font-semibold">Julien Bam</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 3', 'Xman Animation')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-yellow-500 hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/Jf1lW_nGpr3dYbKtxrKTcti6Eq9z4SIQZDGncX6_ykUUwhQjMUwIeIgwwzo3CLF4mqlNC9Ft=s1920-c-k-c0x00ffffff-no-rj" alt="Xman Animations Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-yellow-400 transition-colors">Xman Animation (@XmanAnimation)</h2>
+                    <p class="text-[10px] text-yellow-400/80 mt-1 uppercase tracking-widest font-semibold">Xman Animation</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 4', 'KreekCraft')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/sTrSKwsLNGlYDlavBC_8fyu6B1Uym_LhzAvSb7U-p1Mb-t_jvVA0LlMDcNCfNfVyY39H6V05lCA=s1920-c-k-c0x00ffffff-no-rj" alt="KreekCrafts Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-blue-400 transition-colors">KreekCraft (@KreekCraft)</h2>
+                    <p class="text-[10px] text-blue-400/80 mt-1 uppercase tracking-widest font-semibold">KreekCraft</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 5', 'SYou')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_lwhyE88NXJ7IIBeXXBq7bWyIwYzMJVKdQvUDgncf6Vtg=s1960-c-k-c0x00ffffff-no-rj" alt="SYous Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-emerald-400 transition-colors">SYou (@SYou)</h2>
+                    <p class="text-[10px] text-emerald-400/80 mt-1 uppercase tracking-widest font-semibold">SYou</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 6', 'HüseyinAliBS')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-red-500 hover:shadow-[0_0_30px_rgba(239,68,68,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/iX6qkB9qj52lydxpPxRdnusBkbDVnth_r9m5qtoStokFcAyPI1DUFE8z1J-9eSOcHrXpJjsf2Ng=s1920-c-k-c0x00ffffff-no-rj" alt="HüseyinAliBSs Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-red-400 transition-colors">HüseyinAliBS (@HüseyinAliBS)</h2>
+                    <p class="text-[10px] text-red-400/80 mt-1 uppercase tracking-widest font-semibold">HüseyinAliBS</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 7', 'iCrimax')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_k2IrEeYOP1Y6t1sxAqoQfT2E0Z2qsJT6xwGyPKs5R0XiE=s1920-c-k-c0x00ffffff-no-rj" alt="iCrimaxs Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-cyan-400 transition-colors">iCrimax (@iCrimax)</h2>
+                    <p class="text-[10px] text-cyan-400/80 mt-1 uppercase tracking-widest font-semibold">iCrimax</p>
+                </div>
+            </button>
+
+            <button onclick="sendVote('Option 8', 'LaserLuca')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none">
+                <div class="overflow-hidden h-40">
+                    <img src="https://yt3.googleusercontent.com/nN1aL3f2PknPfikS9ofIrYhHhkkV3QSKaATcLSClr96Jw9fAFoB9R-oGEbeNdOMPLYteyKvM=s1920-c-k-c0x00ffffff-no-rj" alt="LaserLucas Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
+                </div>
+                <div class="p-5">
+                    <span class="text-3xl inline-block transition-transform duration-300 group-hover:animate-bounce">🗳️</span>
+                    <h2 class="text-xl font-bold mt-1 tracking-wide group-hover:text-cyan-400 transition-colors">LaserLuca (@luca)</h2>
+                    <p class="text-[10px] text-cyan-400/80 mt-1 uppercase tracking-widest font-semibold">LaserLuca</p>
+                </div>
+            </button>
+        </div>
+
+        <button onclick="sendVote('Option 9', 'ApoRed')" class="group bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-hidden text-center transition-all duration-500 hover:scale-105 hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] disabled:opacity-40 disabled:hover:scale-100 disabled:hover:border-slate-800 disabled:hover:shadow-none mb-12">
             <div class="overflow-hidden h-40">
                 <img src="https://yt3.googleusercontent.com/mPMp3r_2xbsT5VZDlUCz15A5TlufMugeoD3yQ7jwBKp6g56YlmJ133qrCK5EetqGmd-v7lrB=s1960-c-k-c0x00ffffff-no-rj" alt="ApoReds Profilbild" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 group-hover:opacity-90">
             </div>
@@ -118,94 +191,159 @@
                 <p class="text-[10px] text-cyan-400/80 mt-1 uppercase tracking-widest font-semibold">ApoRed (Main Character)</p>
             </div>
         </button>
+
+    </div><!-- end screen-open-block -->
+
+    <!-- ══════════════════════════════════════
+         SCREEN: Voting geschlossen
+    ══════════════════════════════════════ -->
+    <div id="screen-closed-block" class="flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6">
+        <p class="text-xs font-bold tracking-widest uppercase text-purple-400 mb-4">YouTuber Awards Voting 2026 Q2</p>
+        <div class="text-6xl mb-6">🔒</div>
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 uppercase mb-3">
+            Voting beendet
+        </h1>
+        <p class="text-slate-400 text-sm mb-8">Die Abstimmungsphase ist abgeschlossen.<br>Vielen Dank für deine Teilnahme!</p>
+        <div class="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold px-4 py-2 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-red-400 inline-block"></span>
+            Geschlossen
+        </div>
     </div>
 
 <script>
-        // TRAGE HIER DEINE NEUE DISCORD WEBHOOK URL EIN
-        // (Denk dran, den alten Webhook in Discord zu löschen, da er im Chat sichtbar war!)
-        const DISCORD_WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1513876109941412071/0cgKvFxucN_OmhckjiyKoN1mG-Lj1ng2bfOqrSuUsrs9LXVOiznFLXKFHiGx4jeZgMVE';
+    // ════════════════════════════════════════════════
+    //  ▶  ZEITEN ANPASSEN
+    // ════════════════════════════════════════════════
+    const OPEN_TIME  = new Date('2026-06-19T00:00:00');
+    const CLOSE_TIME = new Date('2026-06-29T00:00:00');
+    // ════════════════════════════════════════════════
 
-        const MAX_VOTES = 3;
+    const DISCORD_WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1513876109941412071/0cgKvFxucN_OmhckjiyKoN1mG-Lj1ng2bfOqrSuUsrs9LXVOiznFLXKFHiGx4jeZgMVE';
+    const MAX_VOTES = 3;
 
-        function getUsedVotes() {
-            const votes = localStorage.getItem('usedVotesCount');
-            return votes ? parseInt(votes) : 0;
+    // ── Zeitanzeige im Warte-Screen ──
+    const fmt = d => d.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('info-open').textContent  = fmt(OPEN_TIME);
+    document.getElementById('info-close').textContent = fmt(CLOSE_TIME);
+
+    function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
+
+    function fmtRemaining(ms) {
+        const t = Math.max(0, ms / 1000);
+        const h = Math.floor(t / 3600);
+        const m = Math.floor((t % 3600) / 60);
+        const s = Math.floor(t % 60);
+        if (h > 0) return `${h}h ${pad(m)}m ${pad(s)}s`;
+        if (m > 0) return `${pad(m)}m ${pad(s)}s`;
+        return `${s}s`;
+    }
+
+    function tick() {
+        const now      = Date.now();
+        const toOpen   = OPEN_TIME  - now;
+        const toClose  = CLOSE_TIME - now;
+
+        const waiting = document.getElementById('screen-waiting-block');
+        const open    = document.getElementById('screen-open-block');
+        const closed  = document.getElementById('screen-closed-block');
+
+        if (now < OPEN_TIME) {
+            waiting.className = 'flex flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6 active';
+            open.style.display    = 'none';
+            closed.className      = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
+
+            const t = Math.max(0, toOpen / 1000);
+            document.getElementById('w-days').textContent  = pad(Math.floor(t / 86400));
+            document.getElementById('w-hours').textContent = pad(Math.floor((t % 86400) / 3600));
+            document.getElementById('w-mins').textContent  = pad(Math.floor((t % 3600) / 60));
+            document.getElementById('w-secs').textContent  = pad(t % 60);
+
+        } else if (now >= OPEN_TIME && now < CLOSE_TIME) {
+            waiting.className     = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
+            open.style.display    = 'contents';
+            closed.className      = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
+
+            document.getElementById('open-remaining').textContent = fmtRemaining(toClose);
+
+        } else {
+            waiting.className     = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
+            open.style.display    = 'none';
+            closed.className      = 'flex flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6 active';
         }
+    }
 
-        function updateUI() {
-            const used = getUsedVotes();
-            const left = MAX_VOTES - used;
-            document.getElementById('votes-left').innerText = left;
+    // ── Voting-Logik (unverändert) ──
+    function getUsedVotes() {
+        const votes = localStorage.getItem('usedVotesCount');
+        return votes ? parseInt(votes) : 0;
+    }
 
-            if (left <= 0) {
-                const buttons = document.querySelectorAll('button');
-                buttons.forEach(btn => btn.disabled = true);
-                document.getElementById('votes-left').parentElement.classList.add('border-red-500', 'text-red-400');
-            }
+    function updateUI() {
+        const used = getUsedVotes();
+        const left = MAX_VOTES - used;
+        document.getElementById('votes-left').innerText = left;
+        if (left <= 0) {
+            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            document.getElementById('votes-left').parentElement.classList.add('border-red-500', 'text-red-400');
         }
+    }
 
-        async function sendVote(id, title) {
-            if (DISCORD_WEBHOOK_URL === 'DEINE_DISCORD_WEBHOOK_URL') {
-                alert('Bitte füge zuerst deine Discord-Webhook-URL im Code ein!');
-                return;
+    async function sendVote(id, title) {
+        if (DISCORD_WEBHOOK_URL === 'DEINE_DISCORD_WEBHOOK_URL') {
+            alert('Bitte füge zuerst deine Discord-Webhook-URL im Code ein!');
+            return;
+        }
+        const usedVotes = getUsedVotes();
+        if (usedVotes >= MAX_VOTES) {
+            alert('Du hast deine 3 Stimmen bereits aufgebraucht!');
+            return;
+        }
+        let voterId = localStorage.getItem('voter_fingerprint_id');
+        if (!voterId) {
+            voterId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            localStorage.setItem('voter_fingerprint_id', voterId);
+        }
+        const browserInfo = navigator.userAgent.split(')')[0] + ')';
+        const screenSize  = `${screen.width}x${screen.height}`;
+        const userLang    = navigator.language;
+        const currentVoteNumber = usedVotes + 1;
+
+        const discordMessage = {
+            embeds: [{
+                title: `🎤 Neuer Vote auf YTAwards! (${currentVoteNumber}/3)`,
+                color: 16711823,
+                fields: [
+                    { name: "Gewählt für",              value: `**${id}** (${title})`,           inline: false },
+                    { name: "🕵️‍♂️ Voter-ID (Browser-Key)", value: `\`${voterId}\``,                inline: true  },
+                    { name: "📱 Gerät/System",           value: `\`${browserInfo}\``,             inline: true  },
+                    { name: "🖥️ Bildschirm & Sprache",   value: `\`${screenSize} | ${userLang}\``, inline: true  }
+                ],
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        try {
+            const response = await fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(discordMessage)
+            });
+            if (response.ok) {
+                localStorage.setItem('usedVotesCount', currentVoteNumber);
+                alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
+                updateUI();
+            } else {
+                alert('Fehler beim Senden an Discord.');
             }
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
 
-            const usedVotes = getUsedVotes();
-            if (usedVotes >= MAX_VOTES) {
-                alert('Du hast deine 3 Stimmen bereits aufgebraucht!');
-                return;
-            }
-
-            // --- DETEKTIV-MODUS START ---
-            let voterId = localStorage.getItem('voter_fingerprint_id');
-            if (!voterId) {
-                voterId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
-                localStorage.setItem('voter_fingerprint_id', voterId);
-            }
-
-            const browserInfo = navigator.userAgent.split(')')[0] + ')'; 
-            const screenSize = `${screen.width}x${screen.height}`;
-            const userLang = navigator.language;
-            // --- DETEKTIV-MODUS ENDE ---
-
-            const currentVoteNumber = usedVotes + 1;
-            
-            const discordMessage = {
-                embeds: [{
-                    title: `🎤 Neuer Vote auf YTAwards! (${currentVoteNumber}/3)`,
-                    color: 16711823, 
-                    fields: [
-                        { name: "Gewählt für", value: `**${id}** (${title})`, inline: false },
-                        { name: "🕵️‍♂️ Voter-ID (Browser-Key)", value: `\`${voterId}\``, inline: true },
-                        { name: "📱 Gerät/System", value: `\`${browserInfo}\``, inline: true },
-                        { name: "🖥️ Bildschirm & Sprache", value: `\`${screenSize} | ${userLang}\``, inline: true }
-                    ],
-                    timestamp: new Date().toISOString()
-                }]
-            };
-
-            try {
-                const response = await fetch(DISCORD_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(discordMessage)
-                });
-
-                if (response.ok) {
-                    localStorage.setItem('usedVotesCount', currentVoteNumber);
-                    alert(`Erfolgreich abgestimmt! Du hast noch ${MAX_VOTES - currentVoteNumber} von 3 Stimmen.`);
-                    updateUI();
-                } else {
-                    alert('Fehler beim Senden an Discord.');
-                }
-            } catch (error) {
-                console.error(error);
-                alert(error.message);
-            }
-        } // <-- Schließt sendVote sauber
-
-        // Initialer Aufruf beim Laden der Seite
-        updateUI();
-    </script>
+    tick();
+    setInterval(tick, 1000);
+    updateUI();
+</script>
 </body>
 </html>

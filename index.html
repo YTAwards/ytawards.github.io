@@ -202,17 +202,12 @@
     </div>
 
 <script>
-    // ════════════════════════════════════════════════
-    //  ▶  ZEITEN ANPASSEN
-    // ════════════════════════════════════════════════
     const OPEN_TIME  = new Date('2026-06-19T00:00:00');
     const CLOSE_TIME = new Date('2026-06-29T00:00:00');
-    // ════════════════════════════════════════════════
 
     const DISCORD_WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1513876109941412071/0cgKvFxucN_OmhckjiyKoN1mG-Lj1ng2bfOqrSuUsrs9LXVOiznFLXKFHiGx4jeZgMVE';
     const MAX_VOTES = 3;
 
-    // ── Zeitanzeige im Warte-Screen ──
     const fmt = d => d.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     document.getElementById('info-open').textContent  = fmt(OPEN_TIME);
     document.getElementById('info-close').textContent = fmt(CLOSE_TIME);
@@ -244,13 +239,10 @@
             closed.className      = 'flex-col items-center justify-center min-h-screen w-full max-w-lg text-center px-6';
 
             const totalSeconds = Math.max(0, toOpen / 1000);
-            
-            // Berechnung inklusive verbleibender Millisekunden
             document.getElementById('w-days').textContent  = pad(totalSeconds / 86400);
             document.getElementById('w-hours').textContent = pad((totalSeconds % 86400) / 3600);
             document.getElementById('w-mins').textContent  = pad((totalSeconds % 3600) / 60);
             document.getElementById('w-secs').textContent  = pad(totalSeconds % 60);
-            // Extrahiert die echten verbleibenden 3-stelligen Millisekunden (000-999)
             document.getElementById('w-ms').textContent    = pad(toOpen % 1000, 3);
 
         } else if (now >= OPEN_TIME && now < CLOSE_TIME) {
@@ -267,7 +259,6 @@
         }
     }
 
-    // ── Voting-Logik (unverändert) ──
     function getUsedVotes() {
         const votes = localStorage.getItem('usedVotesCount');
         return votes ? parseInt(votes) : 0;
@@ -336,31 +327,30 @@
         }
     }
 
-console.log('Hi! Hmm, warum schaust du hier rein? Egal, Type dubistgutgenug() für ein Suprise')
+    console.log('Hi! Hmm, warum schaust du hier rein? Egal, Type dubistgutgenug() für ein Suprise');
     window.dubistgutgenug = function dubistgutgenug() {
-const rows = [
-        " D U  B I S T  G U T  G E N U G "
-        " D U  B I S T  G U T  G E N U U U U G"
-        " D U  B I S T  G U T  G E N U G "
-        " D U  B I S T  G U T  G E N U U U U G"
-    ];
-    const big = [
-        "background: #2fa548; " +
-        "color: #fff; " +
-        "font-size: 16px; " +
-        "font-weight: 900; " +
-        "padding: 6px 10px; " +
-        "border-radius: 8px;";
-rows.forEach((r) => console.log("%c" + r, big));
+        const rows = [
+            " D U  B I S T  G U T  G E N U G ",
+            " D U  B I S T  G U T  G E N U U U U G",
+            " D U  B I S T  G U T  G E N U G ",
+            " D U  B I S T  G U T  G E N U U U U G"
+        ];
+        const big =
+            "background: #2fa548; " +
+            "color: #fff; " +
+            "font-size: 16px; " +
+            "font-weight: 900; " +
+            "padding: 6px 10px; " +
+            "border-radius: 8px;";
+        rows.forEach((r) => console.log("%c" + r, big));
 
         console.log(
-            'Du bist gut genug! Hey, aber mal ehrlich, vote! Gib mal YouTubern ne Chance, denn du bist ja schon GUT GENUUUUUUG♥️'
+            'Du bist gut genug! Hey, aber mal ehrlich, vote! Gib mal YouTubern ne Chance, denn du bist ja schon GUT GENUUUUUUG♥️',
             "font-size: 14px; font-weight: 800; color: #2fa548;"
         );
     };
-    
+
     tick();
-    // GANZ WICHTIG: Aktualisiert die Uhr jetzt alle 33 Millisekunden (~30 FPS), damit die Millisekunden flüssig rotieren!
     setInterval(tick, 33);
     updateUI();
 </script>

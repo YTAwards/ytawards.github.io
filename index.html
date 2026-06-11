@@ -336,6 +336,29 @@
         }
     }
 
+console.log('Hi! Hmm, warum schaust du hier rein? Egal, Type dubistgutgenug() für ein Suprise')
+    window.dubistgutgenug = function dubistgutgenug() {
+const rows = [
+        " D U  B I S T  G U T  G E N U G "
+        " D U  B I S T  G U T  G E N U U U U G"
+        " D U  B I S T  G U T  G E N U G "
+        " D U  B I S T  G U T  G E N U U U U G"
+    ];
+    const big = [
+        "background: #2fa548; " +
+        "color: #fff; " +
+        "font-size: 16px; " +
+        "font-weight: 900; " +
+        "padding: 6px 10px; " +
+        "border-radius: 8px;";
+rows.forEach((r) => console.log("%c" + r, big));
+
+        console.log(
+            'Du bist gut genug! Hey, aber mal ehrlich, vote! Gib mal YouTubern ne Chance, denn du bist ja schon GUT GENUUUUUUG♥️'
+            "font-size: 14px; font-weight: 800; color: #2fa548;"
+        );
+    };
+    
     tick();
     // GANZ WICHTIG: Aktualisiert die Uhr jetzt alle 33 Millisekunden (~30 FPS), damit die Millisekunden flüssig rotieren!
     setInterval(tick, 33);

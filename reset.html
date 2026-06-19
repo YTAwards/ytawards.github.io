@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YTAwards 2026 – Lokaler Reset</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-tr from-slate-950 via-red-950/20 to-slate-950">
+
+    <div class="w-full max-w-md bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
+        <p class="text-xs font-bold tracking-widest uppercase text-red-400 mb-2">🔒 Admin Einmalpasswort</p>
+        <h1 class="text-2xl font-extrabold tracking-wide mb-2">Stimmen lokal freigeben</h1>
+        <p class="text-xs text-slate-400 mb-6 font-mono">ID dieses Geräts: <span id="current-id" class="text-yellow-400 font-bold">-</span></p>
+
+        <div class="space-y-4 text-left">
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-slate-400 mb-2 font-semibold">Stündlich wechselndes Passwort</label>
+                <input type="password" id="admin-password" placeholder="Passwort für diese Stunde eingeben" 
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-widest text-red-400 focus:outline-none focus:border-red-500 transition-colors">
+            </div>
+
+            <button onclick="verifyAndReset()" 
+                    class="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(220,38,38,0.2)] hover:shadow-[0_0_25px_rgba(220,38,38,0.4)] active:scale-98 cursor-pointer text-center">
+                Dieses Gerät entsperren
+            </button>
+        </div>
+    </div>
+
+<script>
+    // --- DEIN GEHEIMER SCHLÜSSEL ---
+    // Ändere dieses Wort in dein persönliches Geheimnis. Niemand sieht es, solange er die reset.html nicht öffnet.
+    const SECRET_SALT = "MeinSuperGeheimesBasisWort123!"; 
+
+    // Zeige die aktuelle ID des Browsers an
+    const voterId = localStorage.getItem('voter_fingerprint_id') || 'Keine ID vorhanden';
+    document.getElementById('current-id').textContent = voterId;
+
+    // Funktion, die das korrekte Passwort für die AKTUELL laufende Stunde generiert
+    function generateHourlyPassword() {
+        const now = new Date();
+        // Erzeugt einen String wie "2026-06-19-15" (Jahr-Monat-Tag-Stunde)
+        const timeString = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}`;
+        
+        // Ein einfacher mathematischer "Hash" aus dem TimeString und deinem Geheimsatz
+        const combined = timeString + SECRET_SALT;
+        let hash = 0;
+        for (let i = 0; i < combined.length; i++) {
+            hash = (hash << 5) - hash + combined.charCodeAt(i);
+            hash |= 0;
+        }
+        
+        // Wir machen daraus ein 6-stelliges, leicht zu merkendes/einzutippendes Passwort (z.B. "YTA-48291")
+        return "YTA-" + Math.abs(hash).toString().substring(0, 5);
+    }
+
+    function verifyAndReset() {
+        const inputPass = document.getElementById('admin-password').value.trim();
+        const correctPass = generateHourlyPassword();
+
+        if (inputPass === correctPass) {
+            // Stimmen zurücksetzen
+            localStorage.removeItem('usedVotesCount');
+            
+            // Optional: Dem Nutzer auch direkt eine neue ID verpassen, damit er im Discord als "neu" erscheint
+            localStorage.removeItem('voter_fingerprint_id');
+
+            alert('✅ Erfolgreich! Die Stimmen dieses Browsers wurden zurückgesetzt.');
+            
+            // Zurück zur Voting-Hauptseite leiten
+            window.location.href = 'index.html'; 
+        } else {
+            alert('❌ Falsches Passwort für diese Stunde! Zugriff verweigert.');
+        }
+    }
+
+    // Konsolen-Trick für dich: Wenn du F12 drückst, siehst du das aktuelle Passwort, 
+    // das du auf dem Handy des Users eingeben musst.
+    console.log("🔑 Aktuelles Admin-Passwort für diese Stunde:", generateHourlyPassword());
+</script>
+</body>
+</html>

@@ -8,7 +8,11 @@
 </head>
 <body id="main-body" class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-tr from-slate-950 via-red-950/20 to-slate-950">
 
-    <div id="admin-panel" class="w-full max-w-md bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
+    <div id="loading-screen" class="text-center font-mono text-slate-400 text-xs tracking-widest animate-pulse">
+        PRÜFE AUTORISIERUNG...
+    </div>
+
+    <div id="admin-panel" class="hidden w-full max-w-md bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
         <p class="text-xs font-bold tracking-widest uppercase text-red-400 mb-2">🔒 Admin Einmalpasswort</p>
         <h1 class="text-2xl font-extrabold tracking-wide mb-2">Stimmen lokal freigeben</h1>
         <p class="text-xs text-slate-400 mb-6 font-mono">ID dieses Geräts: <span id="current-id" class="text-yellow-400 font-bold">-</span></p>
@@ -38,20 +42,47 @@
 
 <script>
     const SECRET_SALT = "MeinSuperGeheimesBasisWort123!"; 
+    // DEINE WHITELIST-IP
+    const ADMIN_IP = "2001:4860:7:1710::e2"; 
 
-    // --- SECURITY CHECK BEIM LADEN ---
-    // Wenn dieses Gerät bereits erfolgreich entsperrt wurde, aktivieren wir die 403-Sperre
-    if (localStorage.getItem('admin_reset_done') === 'true') {
-        document.getElementById('admin-panel').remove(); // Löscht das Admin-Panel komplett aus dem DOM
-        document.getElementById('forbidden-screen').classList.remove('hidden'); // Zeigt den 403 Fehler an
+    async function checkSecurityAndIP() {
+        let userIp = "";
         
-        // Macht das Design steril und langweilig wie eine echte Fehlerseite
-        const body = document.getElementById('main-body');
-        body.className = "bg-black text-white min-h-screen flex flex-col items-center justify-center font-sans";
-    } else {
-        // ID ganz normal anzeigen, wenn nicht gesperrt
+        try {
+            // Holt die aktuelle IP des Geräts (unterstützt IPv4 und IPv6)
+            const res = await fetch("https://api64.ipify.org?format=json");
+            const data = await res.json();
+            userIp = data.ip.trim().toLowerCase();
+        } catch (e) {
+            console.error("IP-Check fehlgeschlagen, fahre mit lokalem Speicher-Check fort.");
+        }
+
+        document.getElementById('loading-screen').remove();
+
+        // Wenn es DEINE IP ist -> Voller Zugriff, ignoriere alle Sperren!
+        if (userIp === ADMIN_IP.toLowerCase()) {
+            showAdminPanel();
+            console.log("⚡ Admin-IP erkannt. Zugriff gewährt.");
+            return;
+        }
+
+        // Wenn es NICHT deine IP ist -> Prüfe, ob das Gerät bereits gesperrt wurde
+        if (localStorage.getItem('admin_reset_done') === 'true') {
+            showForbiddenScreen();
+        } else {
+            showAdminPanel();
+        }
+    }
+
+    function showAdminPanel() {
+        document.getElementById('admin-panel').classList.remove('hidden');
         const voterId = localStorage.getItem('voter_fingerprint_id') || 'Keine ID vorhanden';
         document.getElementById('current-id').textContent = voterId;
+    }
+
+    function showForbiddenScreen() {
+        document.getElementById('forbidden-screen').classList.remove('hidden');
+        document.getElementById('main-body').className = "bg-black text-white min-h-screen flex flex-col items-center justify-center font-sans";
     }
 
     function generateHourlyPassword() {
@@ -71,24 +102,23 @@
         const correctPass = generateHourlyPassword();
 
         if (inputPass === correctPass) {
-            // 1. Stimmen zurücksetzen
             localStorage.removeItem('usedVotesCount');
             
-            // 2. Dem Gerät eine neue ID verpassen, damit es wieder frisch voten kann
             const newId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
             localStorage.setItem('voter_fingerprint_id', newId);
 
-            // 3. DIE ABSCHLIESSENDE SPERRE SETZEN
+            // Sperre für normale User brennen
             localStorage.setItem('admin_reset_done', 'true');
 
-            alert('✅ Gerät erfolgreich entsperrt! Du wirst weitergeleitet.');
+            alert('✅ Gerät erfolgreich entsperrt!');
             window.location.href = 'index.html'; 
         } else {
             alert('❌ Falsches Passwort! Zugriff verweigert.');
         }
     }
 
-    // Für dich zum Debuggen im eigenen Browser (F12 drücken)
+    // IP-Prüfung beim Laden starten
+    checkSecurityAndIP();
     console.log("🔑 Passwort für diese Stunde:", generateHourlyPassword());
 </script>
 </body>

@@ -6,9 +6,9 @@
     <title>YTAwards 2026 – Lokaler Reset</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-tr from-slate-950 via-red-950/20 to-slate-950">
+<body id="main-body" class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-tr from-slate-950 via-red-950/20 to-slate-950">
 
-    <div class="w-full max-w-md bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
+    <div id="admin-panel" class="w-full max-w-md bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
         <p class="text-xs font-bold tracking-widest uppercase text-red-400 mb-2">🔒 Admin Einmalpasswort</p>
         <h1 class="text-2xl font-extrabold tracking-wide mb-2">Stimmen lokal freigeben</h1>
         <p class="text-xs text-slate-400 mb-6 font-mono">ID dieses Geräts: <span id="current-id" class="text-yellow-400 font-bold">-</span></p>
@@ -16,7 +16,7 @@
         <div class="space-y-4 text-left">
             <div>
                 <label class="block text-xs uppercase tracking-wider text-slate-400 mb-2 font-semibold">Stündlich wechselndes Passwort</label>
-                <input type="password" id="admin-password" placeholder="Passwort für diese Stunde eingeben" 
+                <input type="password" id="admin-password" placeholder="Passwort eingeben" 
                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-widest text-red-400 focus:outline-none focus:border-red-500 transition-colors">
             </div>
 
@@ -27,30 +27,42 @@
         </div>
     </div>
 
+    <div id="forbidden-screen" class="hidden text-center max-w-lg px-4">
+        <h1 class="text-9xl font-black text-red-600 font-mono tracking-widest drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]">403</h1>
+        <h2 class="text-2xl font-bold uppercase tracking-wide mt-4 mb-2 text-slate-200">Zugriff verweigert / Forbidden</h2>
+        <p class="text-slate-500 text-sm font-mono mb-6">You don't have permission to access this resource on this server.</p>
+        <a href="index.html" class="inline-block bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs uppercase tracking-wider font-semibold px-6 py-2.5 rounded-xl transition-colors">
+            Zurück zur Startseite
+        </a>
+    </div>
+
 <script>
-    // --- DEIN GEHEIMER SCHLÜSSEL ---
-    // Ändere dieses Wort in dein persönliches Geheimnis. Niemand sieht es, solange er die reset.html nicht öffnet.
     const SECRET_SALT = "MeinSuperGeheimesBasisWort123!"; 
 
-    // Zeige die aktuelle ID des Browsers an
-    const voterId = localStorage.getItem('voter_fingerprint_id') || 'Keine ID vorhanden';
-    document.getElementById('current-id').textContent = voterId;
+    // --- SECURITY CHECK BEIM LADEN ---
+    // Wenn dieses Gerät bereits erfolgreich entsperrt wurde, aktivieren wir die 403-Sperre
+    if (localStorage.getItem('admin_reset_done') === 'true') {
+        document.getElementById('admin-panel').remove(); // Löscht das Admin-Panel komplett aus dem DOM
+        document.getElementById('forbidden-screen').classList.remove('hidden'); // Zeigt den 403 Fehler an
+        
+        // Macht das Design steril und langweilig wie eine echte Fehlerseite
+        const body = document.getElementById('main-body');
+        body.className = "bg-black text-white min-h-screen flex flex-col items-center justify-center font-sans";
+    } else {
+        // ID ganz normal anzeigen, wenn nicht gesperrt
+        const voterId = localStorage.getItem('voter_fingerprint_id') || 'Keine ID vorhanden';
+        document.getElementById('current-id').textContent = voterId;
+    }
 
-    // Funktion, die das korrekte Passwort für die AKTUELL laufende Stunde generiert
     function generateHourlyPassword() {
         const now = new Date();
-        // Erzeugt einen String wie "2026-06-19-15" (Jahr-Monat-Tag-Stunde)
         const timeString = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}`;
-        
-        // Ein einfacher mathematischer "Hash" aus dem TimeString und deinem Geheimsatz
         const combined = timeString + SECRET_SALT;
         let hash = 0;
         for (let i = 0; i < combined.length; i++) {
             hash = (hash << 5) - hash + combined.charCodeAt(i);
             hash |= 0;
         }
-        
-        // Wir machen daraus ein 6-stelliges, leicht zu merkendes/einzutippendes Passwort (z.B. "YTA-48291")
         return "YTA-" + Math.abs(hash).toString().substring(0, 5);
     }
 
@@ -59,24 +71,25 @@
         const correctPass = generateHourlyPassword();
 
         if (inputPass === correctPass) {
-            // Stimmen zurücksetzen
+            // 1. Stimmen zurücksetzen
             localStorage.removeItem('usedVotesCount');
             
-            // Optional: Dem Nutzer auch direkt eine neue ID verpassen, damit er im Discord als "neu" erscheint
-            localStorage.removeItem('voter_fingerprint_id');
+            // 2. Dem Gerät eine neue ID verpassen, damit es wieder frisch voten kann
+            const newId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            localStorage.setItem('voter_fingerprint_id', newId);
 
-            alert('✅ Erfolgreich! Die Stimmen dieses Browsers wurden zurückgesetzt.');
-            
-            // Zurück zur Voting-Hauptseite leiten
+            // 3. DIE ABSCHLIESSENDE SPERRE SETZEN
+            localStorage.setItem('admin_reset_done', 'true');
+
+            alert('✅ Gerät erfolgreich entsperrt! Du wirst weitergeleitet.');
             window.location.href = 'index.html'; 
         } else {
-            alert('❌ Falsches Passwort für diese Stunde! Zugriff verweigert.');
+            alert('❌ Falsches Passwort! Zugriff verweigert.');
         }
     }
 
-    // Konsolen-Trick für dich: Wenn du F12 drückst, siehst du das aktuelle Passwort, 
-    // das du auf dem Handy des Users eingeben musst.
-    console.log("🔑 Aktuelles Admin-Passwort für diese Stunde:", generateHourlyPassword());
+    // Für dich zum Debuggen im eigenen Browser (F12 drücken)
+    console.log("🔑 Passwort für diese Stunde:", generateHourlyPassword());
 </script>
 </body>
 </html>

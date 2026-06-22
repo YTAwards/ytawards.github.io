@@ -31,11 +31,51 @@
         </div>
     </div>
 
-    <div id="forbidden-screen" class="hidden text-center max-w-lg px-4">
-        <h1 class="text-9xl font-black text-red-600 font-mono tracking-widest drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]">403</h1>
-        <h2 class="text-2xl font-bold uppercase tracking-wide mt-4 mb-2 text-slate-200">Zugriff verweigert / Forbidden</h2>
-        <p class="text-slate-500 text-sm font-mono mb-6">You don't have permission to access this resource on this server.</p>
-        <a href="index.html" class="inline-block bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs uppercase tracking-wider font-semibold px-6 py-2.5 rounded-xl transition-colors">
+    <div id="forbidden-screen" class="hidden text-center w-full max-w-3xl px-8 py-12 bg-[#e0e0e0] text-black border-4 border-gray-400 shadow-2xl rounded-sm font-sans select-none my-4">
+        
+        <div class="flex justify-between items-start mb-12">
+            <div class="text-left flex items-center space-x-2">
+                <span class="text-3xl">🦅</span> 
+                <div class="font-bold text-[10px] md:text-xs uppercase tracking-wider text-gray-700 leading-tight">
+                    Bundesamt für<br>Internet-Scherze
+                </div>
+            </div>
+            <div class="text-right flex items-center space-x-2">
+                <div class="font-bold text-[10px] md:text-xs uppercase tracking-wider text-gray-700 leading-tight">
+                    Zentralstelle für<br>Schummler-Bekämpfung
+                </div>
+                <span class="text-3xl">🛡️</span>
+            </div>
+        </div>
+
+        <div class="space-y-4 my-10">
+            <h1 class="text-xl md:text-3xl font-extrabold tracking-tight text-gray-900 leading-snug">
+                Die Plattform und der schummelnde Inhalt wurden beschlagnahmt
+            </h1>
+            <p class="text-base md:text-xl font-medium text-gray-800">
+                durch das Bundesamt für Straftaten im Cybernetzwerk <br>
+                und der EFAK e. V.
+            </p>
+        </div>
+
+        <hr class="border-gray-400 my-8">
+
+        <div class="space-y-4 my-10">
+            <h1 class="text-xl md:text-3xl font-extrabold tracking-tight text-gray-900 leading-snug">
+                The platform and the trolling content have been seized
+            </h1>
+            <p class="text-base md:text-xl font-medium text-gray-800">
+                by the Federal Bureau of Crimes in the Cybernetwork <br>
+                and the EFAK e. V.
+            </p>
+        </div>
+
+        <p class="text-xs font-mono text-gray-600 mt-12 bg-gray-300/60 py-3 px-4 rounded border border-gray-400/50">
+            For security reasons, your I.P (Internet Protocol Adress) has been logged. More Information at <a href="https://pranx.com/fbi-warning/" target="_blank" class="text-blue-700 underline font-sans hover:text-blue-900">our site</a>.<br class="hidden md:inline">
+            <span class="text-red-700 font-bold font-sans text-sm block mt-2">Your local I.P adress is: <span id="user-ip-display" class="text-blue-700 underline font-mono">loading</span></span>
+        </p>
+        
+        <a href="index.html" class="inline-block mt-8 bg-gray-900 hover:bg-gray-800 text-white text-xs uppercase tracking-wider font-semibold px-6 py-3 rounded transition-colors shadow-md">
             Zurück zur Startseite
         </a>
     </div>
@@ -43,18 +83,28 @@
 <script>
     const SECRET_SALT = "MeinSuperGeheimesBasisWort123!"; 
     // DEINE WHITELIST-IP
-    const ADMIN_IP = "127.0.0.1"; 
+    const ADMIN_IP = "2001:4860:7:1710::e2";
 
     async function checkSecurityAndIP() {
         let userIp = "";
         
         try {
-            // Holt die aktuelle IP des Geräts (unterstützt IPv4 und IPv6)
+            // Holt die aktuelle IP des Geräts
             const res = await fetch("https://api64.ipify.org?format=json");
             const data = await res.json();
             userIp = data.ip.trim().toLowerCase();
+            
+            // IP in das Trolling-Feld eintragen
+            const ipDisplayElement = document.getElementById('user-ip-display');
+            if (ipDisplayElement) {
+                ipDisplayElement.textContent = data.ip;
+            }
         } catch (e) {
             console.error("IP-Check fehlgeschlagen, fahre mit lokalem Speicher-Check fort.");
+            const ipDisplayElement = document.getElementById('user-ip-display');
+            if (ipDisplayElement) {
+                ipDisplayElement.textContent = "Unbekannt (Localhost)";
+            }
         }
 
         document.getElementById('loading-screen').remove();
@@ -82,7 +132,7 @@
 
     function showForbiddenScreen() {
         document.getElementById('forbidden-screen').classList.remove('hidden');
-        document.getElementById('main-body').className = "bg-black text-white min-h-screen flex flex-col items-center justify-center font-sans";
+        document.getElementById('main-body').className = "bg-[#f0f0f0] text-black min-h-screen flex flex-col items-center justify-center p-4 font-sans";
     }
 
     function generateHourlyPassword() {
@@ -107,7 +157,7 @@
             const newId = 'VOTER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
             localStorage.setItem('voter_fingerprint_id', newId);
 
-            // Sperre für normale User brennen
+            // Sperre für normale User aktivieren
             localStorage.setItem('admin_reset_done', 'true');
 
             alert('✅ Gerät erfolgreich entsperrt!');
